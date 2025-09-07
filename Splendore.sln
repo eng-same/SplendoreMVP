@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplendoreMVP", "SplendoreMVP\SplendoreMVP.csproj", "{90AEF8EF-E138-4E90-82DB-7FE50D2B8791}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90AEF8EF-E138-4E90-82DB-7FE50D2B8791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90AEF8EF-E138-4E90-82DB-7FE50D2B8791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90AEF8EF-E138-4E90-82DB-7FE50D2B8791}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90AEF8EF-E138-4E90-82DB-7FE50D2B8791}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB2D12DA-4DDF-4215-8758-A58E56A17AAB}
+	EndGlobalSection
+EndGlobal
