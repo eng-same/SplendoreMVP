@@ -37,5 +37,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+var seeder = new IdentityDataSeeder();
+await seeder.SeedAsync(app);
 
 app.Run();
