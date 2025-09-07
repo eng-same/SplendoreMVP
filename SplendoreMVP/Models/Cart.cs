@@ -5,7 +5,7 @@
         public int Id { get; set; }
 
         //FK
-        public int CustomerID { get; set; }
+        public string CustomerID { get; set; }
 
         //Navigation
         public ApplicationUser Customer { get; set; } = null!;
