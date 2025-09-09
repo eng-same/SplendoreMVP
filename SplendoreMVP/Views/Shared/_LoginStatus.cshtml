@@ -1,0 +1,44 @@
+﻿<ul class="navbar-nav align-items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        var roles = await UserManager.GetRolesAsync(currentUser);
+
+        var profilePicture = string.IsNullOrEmpty(currentUser?.ProfilePic)
+        ? "https://placehold.co/40"
+        : currentUser.ProfilePic;
+
+        <li class="nav-item d-flex align-items-center">
+            <!-- Profile image -->
+            <img src="@profilePicture"
+                 alt="Profile"
+                 class="rounded-circle me-2 shadow-sm border"
+                 style="width:40px;height:40px;object-fit:cover;" />
+
+            <!-- Username + Role -->
+            <div class="d-flex flex-column">
+                <span class="fw-semibold">@UserManager.GetUserName(User)</span>
+                @if (roles.Any())
+                {
+                    <small class="text-muted">@string.Join(", ", roles)</small>
+                }
+            </div>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-item ms-3">
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+        </li>
+    }
+</ul>
