@@ -9,6 +9,6 @@ namespace SplendoreMVP.View_Models
         [Required]
         public string Password { get; set; }
         
-        public bool RememberMe { get; set; } = false;
+        public bool RememberMe { get; set; } =false;
     }
 }

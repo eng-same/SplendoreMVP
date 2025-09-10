@@ -91,7 +91,7 @@ namespace SplendoreMVP.Controllers
             }
             var result = await _signInManager.PasswordSignInAsync(
                 user,
-                model.Password,
+                model.Password, 
                 isPersistent: model.RememberMe,
                 lockoutOnFailure: false);
             if (result.Succeeded)
