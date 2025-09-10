@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddTransient<IHomeRepository, HomeRepository>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<CategoryRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -19,6 +21,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 { options.User.RequireUniqueEmail = true; } )
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+//Authorization Policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOrSupervisor", policy =>
+        policy.RequireRole("Admin", "Supervisor"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +45,11 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+          ).WithStaticAssets(); 
 
 app.MapControllerRoute(
     name: "default",

@@ -1,0 +1,97 @@
+﻿@model ProductsDisplayModel
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-secondary">📦 Manage Products</h2>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="btn btn-success">
+            ➕ Add New Product
+        </a>
+    </div>
+
+    <!-- Search and Category Filter -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <form method="get" asp-action="Index" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="sterm" value="@Model.STerm"
+                           class="form-control" placeholder="🔍 Search products..." />
+                </div>
+                <div class="col-md-4">
+                    <select name="CategoryID" class="form-select">
+                        <option value="0">All Categories</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id" selected="@(Model.CategoryID == category.Id ? "selected" : null)">
+                                @category.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    @if (Model.Products.Any())
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                            <th style="width: 180px;" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@product.Name</td>
+                                <td class="text-muted">@product.Description</td>
+                                <td class="text-success">@product.Price.ToString("C")</td>
+                                <td>
+                                    @if (product.StockQuantity > 10)
+                                    {
+                                        <span class="badge bg-success">@product.StockQuantity</span>
+                                    }
+                                    else if (product.StockQuantity > 0)
+                                    {
+                                        <span class="badge bg-warning text-dark">@product.StockQuantity</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Out of stock</span>
+                                    }
+                                </td>
+                                <td>@product.Category?.Name</td>
+                                <td class="text-center">
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"
+                                       class="btn btn-sm btn-outline-primary me-1">
+                                        Details
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this product?');">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info shadow-sm">No products found.</div>
+    }
+</div>

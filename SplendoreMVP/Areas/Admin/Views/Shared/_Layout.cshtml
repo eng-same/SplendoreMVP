@@ -1,0 +1,130 @@
+﻿@* _AdminLayout.cshtml *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SplendoreMVP Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* === Color Palette (60-30-10 rule) === */
+        :root {
+            --primary-bg: #F8F9FA; /* 60% light gray */
+            --secondary-bg: #4A6A8A; /* 30% slate blue */
+            --accent: #007BFF; /* 10% accent blue */
+            --success: #28A745;
+            --error: #DC3545;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            min-height: 100vh;
+            background-color: var(--secondary-bg);
+            color: white;
+        }
+
+            .admin-sidebar .nav-link {
+                color: rgba(255, 255, 255, 0.85);
+                transition: all 0.3s;
+            }
+
+                .admin-sidebar .nav-link:hover,
+                .admin-sidebar .nav-link.active {
+                    background-color: rgba(255, 255, 255, 0.1);
+                    color: var(--accent);
+                }
+
+        /* Top Navbar */
+        .admin-navbar {
+            background-color: var(--secondary-bg);
+        }
+
+            .admin-navbar .navbar-brand {
+                color: white;
+                font-weight: 600;
+            }
+
+        /* Content Area */
+        .admin-content {
+            padding: 2rem;
+        }
+
+        /* Footer */
+        .admin-footer {
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+            padding: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg admin-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/Admin/Dashboard">Splendore Admin</a>
+            <div class="d-flex">
+                <partial name="_LoginStatus" />
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 col-lg-2 admin-sidebar p-3">
+                <h5 class="text-white mb-4">Admin Menu</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/Admin/Dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Product">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Category">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Users">Users</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 col-lg-10 admin-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <footer class="admin-footer mt-auto">
+        <div class="container-fluid text-center text-muted small py-3">
+            &copy; 2025 <span class="fw-bold">SplendoreMVP</span> | Admin Dashboard
+        </div>
+    </footer>
+
+    <style>
+        .admin-footer {
+            background-color: #ffffff; /* clean white for separation */
+            border-top: 1px solid #dee2e6; /* subtle divider */
+        }
+
+            .admin-footer span {
+                color: #4A6A8A; /* secondary blue from your palette */
+            }
+    </style>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

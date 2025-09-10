@@ -1,0 +1,61 @@
+﻿@model SplendoreMVP.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+    // Use the image URL as-is, assuming it starts with a leading slash
+    string imageUrl = string.IsNullOrEmpty(Model.ImageUrl) ? "/images/products/placeholder.jpg" : Model.ImageUrl;
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="row g-0">
+            <!-- Product Image -->
+            <div class="col-md-4 d-flex align-items-center justify-content-center p-3 bg-light">
+                <img src="@imageUrl" 
+                     alt="Product Image" 
+                     class="img-fluid rounded-3 shadow-sm"
+                     style="max-height: 320px; object-fit: contain;" />
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h2 class="card-title text-primary fw-bold mb-3">@Model.Name</h2>
+                    <p class="text-muted">@Model.Description</p>
+                    
+                    <hr />
+
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Price:</div>
+                        <div class="col-sm-8 text-success">@Model.Price.ToString("C")</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Stock:</div>
+                        <div class="col-sm-8">@Model.StockQuantity</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Category:</div>
+                        <div class="col-sm-8">@Model.Category?.Name</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-4 fw-bold">Image URL:</div>
+                        <div class="col-sm-8 text-break">@Model.ImageUrl</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-footer text-end bg-white">
+            <a asp-action="Upsert" asp-route-id="@Model?.Id" class="btn btn-warning me-2">
+                <i class="bi bi-pencil-square"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
