@@ -11,11 +11,13 @@ namespace SplendoreMVP.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHomeRepository _homerepo;
+        private readonly UserProductRepository _productrepo;
 
-        public HomeController(ILogger<HomeController> logger ,IHomeRepository homeRepository)
+        public HomeController(ILogger<HomeController> logger ,IHomeRepository homeRepository , UserProductRepository userProductRepository)
         {
             _logger = logger;
             _homerepo = homeRepository;
+            _productrepo = userProductRepository;
         }
 
         public async Task<IActionResult> Index(string sterm = "", int CategoryID = 0)
@@ -32,11 +34,38 @@ namespace SplendoreMVP.Controllers
             return View(bookModel);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await _productrepo.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var related = await _productrepo.GetRelatedProducts(product.CategoryID, product.Id);
+
+            var vm = new ProductDetailsDisplayModel
+            {
+                Product = product,
+                RelatedProducts = related
+            };
+
+            return View(vm);
+        }
+
         public IActionResult Privacy()
         {
             return View();
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult Contact()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

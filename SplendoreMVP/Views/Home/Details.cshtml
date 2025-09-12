@@ -1,0 +1,46 @@
+﻿@model ProductDetailsDisplayModel
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-5">
+            <img src="@(string.IsNullOrEmpty(Model.Product.ImageUrl) ? "NoImage.png" : Model.Product.ImageUrl)"
+                 class="img-fluid rounded shadow" alt="@Model.Product.Name" />
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-7">
+            <h2>@Model.Product.Name</h2>
+            <h5 class="text-muted">Category: @Model.Product.Category.Name</h5>
+            <p>@Model.Product.Description</p>
+            <h4 class="text-success">Price: @Model.Product.Price.ToString("C")</h4>
+            <button class="btn btn-primary" onclick="addToCart(@Model.Product.Id)">Add to Cart</button>
+            <a asp-controller="Cart" asp-action="Buy" asp-route-id="@Model.Product.Id"
+               class="btn btn-sm flex-fill text-white"
+               style="background-color:#4A4A4A;">
+                💰 Buy
+            </a>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="mt-5">
+        <h4>Related Products</h4>
+        <div class="d-flex flex-row overflow-auto gap-3 p-2">
+            @foreach (var related in Model.RelatedProducts)
+            {
+                <div class="card shadow-sm" style="min-width: 200px;">
+                    <img src="@(string.IsNullOrEmpty(related.ImageUrl) ? "NoImage.png" : related.ImageUrl)"
+                         class="card-img-top" style="height: 150px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h6 class="card-title text-truncate">@related.Name</h6>
+                        <p class="text-success fw-bold">@related.Price.ToString("C")</p>
+                        <a asp-action="Details" asp-route-id="@related.Id" class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

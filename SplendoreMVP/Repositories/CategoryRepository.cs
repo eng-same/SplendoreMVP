@@ -31,7 +31,7 @@ namespace SplendoreMVP.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Category?> GetGenreById(int id)
+        public async Task<Category?> GetCategoryById(int id)
         {
             return await _context.Categories.FindAsync(id);
         }

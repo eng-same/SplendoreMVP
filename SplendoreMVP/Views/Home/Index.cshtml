@@ -2,20 +2,22 @@
 
 <div class="container mt-5">
     <!-- Hero Section -->
-    <section class="p-5 mb-5 text-center rounded shadow-sm" style="background-color:#FDFBF7; border:1px solid #eee;">
-        <h1 class="display-5 fw-bold" style="color:#4A4A4A;">Discover Our Products</h1>
-        <p class="lead" style="color:#6c757d;">Curated items designed to bring quality and style into your everyday life.</p>
+    <section class="p-5 mb-5 text-center rounded shadow-sm bg-light border">
+        <h1 class="display-5 fw-bold text-dark">Discover Our Products</h1>
+        <p class="lead text-muted">Curated items designed to bring quality and style into your everyday life.</p>
     </section>
 
     <!-- Search and Category Filter -->
-    <form method="get" asp-action="Index" class="row g-3 mb-5">
+    <form method="get" asp-action="Index" class="row g-3 mb-5 align-items-end">
         <div class="col-md-4">
+            <label class="form-label fw-semibold">Search</label>
             <input type="text" name="sterm" value="@Model.STerm"
                    class="form-control border-0 shadow-sm"
-                   placeholder="Search products..." style="background-color:#FDFBF7;" />
+                   placeholder="Search products..." />
         </div>
         <div class="col-md-4">
-            <select name="CategoryID" class="form-select border-0 shadow-sm" style="background-color:#FDFBF7;">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="CategoryID" class="form-select border-0 shadow-sm">
                 <option value="0">All Categories</option>
                 @foreach (var category in Model.Categories)
                 {
@@ -25,11 +27,15 @@
                 }
             </select>
         </div>
-        <div class="col-md-4">
-            <button type="submit" class="btn w-100 shadow-sm"
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn flex-fill shadow-sm"
                     style="background-color:#2A7F62; color:#fff;">
                 Filter
             </button>
+            <a asp-controller="Home" asp-action="Index"
+               class="btn btn-outline-secondary flex-fill shadow-sm">
+                Reset
+            </a>
         </div>
     </form>
 
@@ -41,41 +47,63 @@
             {
                 var imageUrl = string.IsNullOrEmpty(product.ImageUrl) ? "/images/products/placeholder.jpg" : product.ImageUrl;
                 <div class="col">
-                    <div class="card h-100 border-0 shadow-sm rounded-3" style="background-color:#FDFBF7;">
-                        <img src="@imageUrl" class="card-img-top rounded-top" alt="@product.Name"
-                             style="height:230px; object-fit:cover;" />
+                    <div class="card h-100 border-0 shadow-sm rounded-3 product-card">
+                        <div class="position-relative">
+                            <img src="@imageUrl"
+                                 class="card-img-top rounded-top"
+                                 alt="@product.Name"
+                                 style="height:250px; object-fit:cover;" />
+                            @if (product.StockQuantity == 0)
+                            {
+                                <span class="badge bg-danger position-absolute top-0 end-0 m-2">Out of Stock</span>
+                            }
+                        </div>
 
-                        <div class="card-body d-flex flex-column" style="color:#4A4A4A;">
-                            <h5 class="card-title fw-bold">@product.Name</h5>
-                            <p class="card-text text-muted small">@product.Description</p>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bold text-truncate">@product.Name</h5>
+                            <p class="card-text text-muted small" style="min-height:40px;">
+                                @(!string.IsNullOrEmpty(product.Description) ? product.Description : "No description available.")
+                            </p>
 
                             <div class="mt-auto">
-                                <p class="fw-bold mb-3" style="color:#2A7F62;">@product.Price.ToString("C")</p>
+                                <p class="fw-bold mb-3" style="color:#2A7F62; font-size:1.1rem;">
+                                    @product.Price.ToString("C")
+                                </p>
 
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                        <!-- Add to Cart -->
-                                        <a asp-controller="Cart" asp-action="Add" asp-route-id="@product.Id"
-                                           class="btn btn-sm flex-fill text-white"
-                                           style="background-color:#2A7F62;">
-                                            🛒 Add to Cart
-                                        </a>
+                                    if (product.StockQuantity > 0)
+                                    {
+                                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                                            <!-- Add to Cart -->
+                                            <button type="button"
+                                                    class="btn btn-sm flex-fill text-white"
+                                                    style="background-color:#2A7F62;"
+                                                    onclick="addToCart(@product.Id)">
+                                                🛒 Add
+                                            </button>
 
-                                        <!-- Buy Now -->
-                                        <a asp-controller="Cart" asp-action="Buy" asp-route-id="@product.Id"
-                                           class="btn btn-sm flex-fill text-white"
-                                           style="background-color:#4A4A4A;">
-                                            💰 Buy Now
-                                        </a>
+                                            <!-- Buy Now -->
+                                            <a asp-controller="Cart" asp-action="Buy" asp-route-id="@product.Id"
+                                               class="btn btn-sm flex-fill text-white"
+                                               style="background-color:#4A4A4A;">
+                                                💰 Buy
+                                            </a>
 
-                                        <!-- Add to Favorites -->
-                                        <a asp-controller="Favorites" asp-action="Add" asp-route-id="@product.Id"
-                                           class="btn btn-sm flex-fill border-0 shadow-sm"
-                                           style="background-color:#fff; color:#d9534f;">
-                                            ❤️ Favorite
-                                        </a>
-                                    </div>
+                                            <!-- Add to Favorites -->
+                                            <a asp-controller="Home" asp-action="Details" asp-route-id="@product.Id"
+                                               class="btn btn-sm flex-fill border shadow-sm"
+                                               style="background-color:#fff; color:#d9534f;">
+                                                Details
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-secondary p-2">Unavailable</span>
+                                        </div>
+                                    }
                                 }
                                 else
                                 {
@@ -90,7 +118,7 @@
         else
         {
             <div class="col">
-                <div class="alert alert-info border-0 shadow-sm text-center" style="background-color:#FDFBF7; color:#4A4A4A;">
+                <div class="alert alert-info border-0 shadow-sm text-center bg-light text-dark">
                     No products found.
                 </div>
             </div>

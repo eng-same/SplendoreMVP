@@ -96,6 +96,11 @@ namespace SplendoreMVP.Controllers
                 lockoutOnFailure: false);
             if (result.Succeeded)
             {
+                if (await _userManager.IsInRoleAsync(user , "Admin"))
+                {
+                    return RedirectToAction("Dashboard", "Admin", new {Area ="Admin"});
+
+                }
                 return RedirectToAction("Index", "Home");
             }
 
@@ -103,7 +108,6 @@ namespace SplendoreMVP.Controllers
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

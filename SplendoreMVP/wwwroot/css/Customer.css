@@ -1,0 +1,71 @@
+﻿/* ===== Warm & Natural Commerce Palette ===== */
+:root {
+    --primary-bg: #FDFBF7; /* 60% warm off-white */
+    --secondary: #4A4A4A; /* 30% charcoal */
+    --accent: #2A7F62; /* 10% emerald green */
+}
+
+body {
+    background-color: var(--primary-bg);
+    color: var(--secondary);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--secondary);
+}
+
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+        color: #fff !important;
+    }
+
+        .navbar .nav-link:hover {
+            color: var(--accent) !important;
+        }
+
+/* Hero Section */
+.hero {
+    background-color: var(--primary-bg);
+    text-align: center;
+    padding: 4rem 1rem;
+}
+
+    .hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--secondary);
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: #6c757d;
+    }
+
+    .hero .btn {
+        background-color: var(--accent);
+        border: none;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+        .hero .btn:hover {
+            background-color: #246b52;
+        }
+
+/* Footer */
+.footer {
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+    .footer a {
+        color: var(--accent);
+        text-decoration: none;
+    }

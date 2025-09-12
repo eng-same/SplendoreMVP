@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using SplendoreMVP.Data;
 using SplendoreMVP.Models;
 namespace SplendoreMVP.Repositories
 {
+    [Authorize]
+    [Authorize(Policy = "AdminOrSupervisor")]
     public class ProductRepository
     {
+
         private readonly ApplicationDbContext _context;
         public ProductRepository(ApplicationDbContext dbContext)
         {

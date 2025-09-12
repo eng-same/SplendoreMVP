@@ -13,6 +13,11 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddTransient<IHomeRepository, HomeRepository>();
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddTransient<CartRepository>();
+builder.Services.AddScoped<UserOrderRepository>();
+builder.Services.AddScoped<ReportRepository>();
+builder.Services.AddTransient<OrderRepository>();
+builder.Services.AddTransient<UserProductRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -48,7 +53,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
             name: "areas",
-            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            pattern: "{area:exists}/{controller=Product}/{action=Index}/{id?}"
           ).WithStaticAssets(); 
 
 app.MapControllerRoute(

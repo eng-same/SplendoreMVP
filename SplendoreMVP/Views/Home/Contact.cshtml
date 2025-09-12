@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Get in Touch</h2>
+    <p class="text-center text-muted mb-5">
+        Have questions or feedback? We'd love to hear from you. Fill out the form below or reach us through our contact details.
+    </p>
+
+    <div class="row">
+        <!-- Contact Form -->
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form  asp-action ="Contact" asp-controller="Home">
+                        <div class="mb-3">
+                            <label for="Name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="Name" name="Name" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="Email" name="Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="Subject" name="Subject" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Message" class="form-label">Message</label>
+                            <textarea class="form-control" id="Message" name="Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="col-lg-5">
+            <div class="p-4 border rounded-3 shadow-sm h-100">
+                <h5>Contact Information</h5>
+                <p class="text-muted">
+                    <strong>Email:</strong> <a href="mailto:support@splendorestore.com">support@splendorestore.com</a><br />
+                    <strong>Phone:</strong> +218 123 456 789<br />
+                    <strong>Address:</strong> 123 Splendore Street, Benghazi, Libya
+                </p>
+                <hr />
+                <h5>Business Hours</h5>
+                <p class="text-muted mb-0">
+                    Monday - Friday: 9:00 AM - 6:00 PM<br />
+                    Saturday: 10:00 AM - 4:00 PM<br />
+                    Sunday: Closed
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

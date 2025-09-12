@@ -1,0 +1,40 @@
+﻿@model Order
+
+<div class="container mt-3">
+    <a asp-action="UserOrders" class="btn btn-secondary mb-3">Back to Orders</a>
+
+    <h3>Order Details</h3>
+
+    <div class="mb-3">
+        <strong>Order Date:</strong> @Model.OrderDate.ToString("dd-MM-yyyy") <br />
+        <strong>Status:</strong> @Model.Status <br />
+        <strong>Total:</strong> @Model.TotalAmount
+    </div>
+
+    <table class="table table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Image</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>
+                        <img src="@(string.IsNullOrEmpty(item.Product.ImageUrl) ? "NoImage.png" : item.Product.ImageUrl)"
+                             style="width:80px;height:100px;" />
+                    </td>
+                    <td>@item.Quantity</td>
+                    <td>@item.UnitPrice</td>
+                    <td>@(item.UnitPrice* item.Quantity)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

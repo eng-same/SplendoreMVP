@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Categories</h2>
+        <a asp-action="Upsert" class="btn btn-primary">➕ Add Category</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th style="width:180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model)
+            {
+                <tr>
+                    <td>@cat.Id</td>
+                    <td>@cat.Name</td>
+                    <td>@cat.Description</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@cat.Id" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="Upsert" asp-route-id="@cat.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@cat.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

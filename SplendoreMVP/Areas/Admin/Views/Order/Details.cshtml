@@ -1,0 +1,41 @@
+﻿@model Order
+
+<div class="container mt-5">
+    <h2>Order Details</h2>
+    <hr />
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Order ID: @Model.Id</h5>
+            <p><strong>Customer:</strong> @Model.Customer.UserName</p>
+            <p><strong>Date:</strong> @Model.OrderDate.ToString("f")</p>
+            <p><strong>Status:</strong> <span class="badge bg-primary">@Model.Status</span></p>
+            <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+        </div>
+    </div>
+
+    <h4>Order Items</h4>
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Quantity* item.UnitPrice).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">Back to Orders</a>
+</div>
