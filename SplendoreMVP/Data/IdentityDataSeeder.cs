@@ -1,113 +1,195 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bogus;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using SplendoreMVP.Models;
+using SplendoreMVP.Services;
+using System.Net.Http;
 
 namespace SplendoreMVP.Data
 {
     public class IdentityDataSeeder
     {
+        private readonly IFileService _fileService;
+
+        public IdentityDataSeeder(IFileService fileService)
+        {
+            _fileService = fileService;
+        }
+
         public async Task SeedIdentityAsync(WebApplication app)
         {
-            using (var scope = app.Services.CreateScope())
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            // Roles
+            string[] roles = { "Admin", "Customer", "Supervisor" };
+            foreach (var role in roles)
             {
-                var services = scope.ServiceProvider;
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                // Define roles
-                string[] roles = { "Admin", "Customer", "Supervisor" };
+                if (!await roleManager.RoleExistsAsync(role))
+                    await roleManager.CreateAsync(new IdentityRole(role));
+            }
 
-                foreach (var role in roles)
+            // Admin user
+            string adminEmail = "admin@shop.com";
+            string adminPassword = "Admin@123";
+
+            if (await userManager.FindByEmailAsync(adminEmail) == null)
+            {
+                var adminUser = new ApplicationUser
                 {
-                    if (!await roleManager.RoleExistsAsync(role))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole
-                        {
-                            Name = role
-                        });
-                    }
-                }
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    FirstName = "System",
+                    LastName = "Admin",
+                    EmailConfirmed = true
+                };
 
-                // Seed Admin User
-                string adminEmail = "admin@shop.com";
-                string adminPassword = "Admin@123";
-
-                if (await userManager.FindByEmailAsync(adminEmail) == null)
-                {
-                    var adminUser = new ApplicationUser
-                    {
-                        UserName = adminEmail,
-                        Email = adminEmail,
-                        FirstName = "System",
-                        LastName = "Admin",
-                        EmailConfirmed = true
-                    };
-
-                    var result = await userManager.CreateAsync(adminUser, adminPassword);
-
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(adminUser, "Admin");
-                    }
-                }
+                var result = await userManager.CreateAsync(adminUser, adminPassword);
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
+
         public async Task SeedProductsAsync(WebApplication app)
         {
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
-
             var context = services.GetRequiredService<ApplicationDbContext>();
 
             if (!context.Categories.Any())
             {
-                var electronics = new Category
-                {
-                    Name = "Electronics",
-                    Description = "Gadgets, devices, and accessories"
-                };
+                var faker = new Faker();
+                using var http = new HttpClient();
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("SplendoreMVP-Seeder/1.0");
+                string placeholderBase = "https://placehold.co";
+                var allowedExtensions = new[] { ".png", ".jpg", ".jpeg", ".svg" };
 
-                var clothing = new Category
+                // Create 10 categories
+                var categories = new List<Category>();
+                for (int i = 0; i < 10; i++)
                 {
-                    Name = "Clothing",
-                    Description = "Apparel for men, women, and children"
-                };
+                    var category = new Category
+                    {
+                        Name = faker.Commerce.Categories(1)[0],
+                        Description = faker.Commerce.ProductDescription()
+                    };
+                    categories.Add(category);
+                }
 
-                var books = new Category
-                {
-                    Name = "Books",
-                    Description = "Fiction, non-fiction, and educational books"
-                };
-
-                context.Categories.AddRange(electronics, clothing, books);
+                context.Categories.AddRange(categories);
                 await context.SaveChangesAsync();
 
-                // Seed products after categories
-                var products = new List<Product>
-        {
-            // Electronics
-            new Product { Name = "Smartphone", Description = "Latest Android smartphone", Price = 699.99M, StockQuantity = 50, ImageUrl = "/images/products/smartphone.jpg", CategoryID = electronics.Id },
-            new Product { Name = "Laptop", Description = "Powerful laptop for work and gaming", Price = 1299.00M, StockQuantity = 30, ImageUrl = "/images/products/laptop.jpg", CategoryID = electronics.Id },
-            new Product { Name = "Wireless Headphones", Description = "Noise-cancelling Bluetooth headphones", Price = 199.99M, StockQuantity = 100, ImageUrl = "/images/products/headphones.jpg", CategoryID = electronics.Id },
-            new Product { Name = "Smartwatch", Description = "Fitness tracking smartwatch", Price = 249.99M, StockQuantity = 70, ImageUrl = "/images/products/smartwatch.jpg", CategoryID = electronics.Id },
-            new Product { Name = "Tablet", Description = "10-inch Android tablet", Price = 349.99M, StockQuantity = 40, ImageUrl = "/images/products/tablet.jpg", CategoryID = electronics.Id },
+                foreach (var category in categories)
+                {
+                    for (int i = 0; i < 13; i++)
+                    {
+                        var productName = faker.Commerce.ProductName();
+                        var product = new Product
+                        {
+                            Name = productName,
+                            Description = faker.Commerce.ProductDescription(),
+                            Price = decimal.Parse(faker.Commerce.Price(10, 1000)),
+                            StockQuantity = faker.Random.Int(10, 200),
+                            CategoryID = category.Id
+                        };
 
-            // Clothing
-            new Product { Name = "T-Shirt", Description = "100% cotton T-shirt", Price = 19.99M, StockQuantity = 200, ImageUrl = "/images/products/tshirt.jpg", CategoryID = clothing.Id },
-            new Product { Name = "Jeans", Description = "Slim fit blue jeans", Price = 49.99M, StockQuantity = 150, ImageUrl = "/images/products/jeans.jpg", CategoryID = clothing.Id },
-            new Product { Name = "Jacket", Description = "Warm winter jacket", Price = 89.99M, StockQuantity = 80, ImageUrl = "/images/products/jacket.jpg", CategoryID = clothing.Id },
-            new Product { Name = "Sneakers", Description = "Comfortable everyday sneakers", Price = 59.99M, StockQuantity = 120, ImageUrl = "/images/products/sneakers.jpg", CategoryID = clothing.Id },
-            new Product { Name = "Dress", Description = "Elegant evening dress", Price = 99.99M, StockQuantity = 60, ImageUrl = "/images/products/dress.jpg", CategoryID = clothing.Id },
+                        try
+                        {
+                            // Try explicit PNG endpoint first
+                            string requestUrl = $"{placeholderBase}/300x300.png?text={Uri.EscapeDataString(productName)}";
+                            HttpResponseMessage response = null;
 
-            // Books
-            new Product { Name = "Novel", Description = "Bestselling fiction novel", Price = 12.99M, StockQuantity = 100, ImageUrl = "/images/products/novel.jpg", CategoryID = books.Id },
-            new Product { Name = "Science Book", Description = "Introduction to physics", Price = 29.99M, StockQuantity = 90, ImageUrl = "/images/products/science.jpg", CategoryID = books.Id },
-            new Product { Name = "History Book", Description = "World history overview", Price = 24.99M, StockQuantity = 70, ImageUrl = "/images/products/history.jpg", CategoryID = books.Id },
-            new Product { Name = "Children's Storybook", Description = "Illustrated bedtime stories", Price = 14.99M, StockQuantity = 150, ImageUrl = "/images/products/children.jpg", CategoryID = books.Id },
-            new Product { Name = "Cookbook", Description = "Recipes from around the world", Price = 34.99M, StockQuantity = 60, ImageUrl = "/images/products/cookbook.jpg", CategoryID = books.Id }
-        };
+                            try
+                            {
+                                response = await http.GetAsync(requestUrl);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[Seeder] HTTP error requesting PNG for '{productName}': {ex.Message}");
+                            }
 
-                context.Products.AddRange(products);
+                            // Fallback to generic endpoint if PNG failed or returned non-success
+                            if (response == null || !response.IsSuccessStatusCode)
+                            {
+                                requestUrl = $"{placeholderBase}/300x300?text={Uri.EscapeDataString(productName)}";
+                                try
+                                {
+                                    response = await http.GetAsync(requestUrl);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"[Seeder] HTTP error requesting fallback image for '{productName}': {ex.Message}");
+                                    response = null;
+                                }
+                            }
+
+                            if (response == null || !response.IsSuccessStatusCode)
+                            {
+                                Console.WriteLine($"[Seeder] Image request failed for '{productName}'. Skipping image.");
+                                // add product without image (optional)
+                                context.Products.Add(product);
+                                continue;
+                            }
+
+                            var mediaType = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
+                            if (!mediaType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Console.WriteLine($"[Seeder] Expected image/* but got '{mediaType}' for '{productName}'. Skipping image.");
+                                context.Products.Add(product);
+                                continue;
+                            }
+
+                            var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                            if (imageBytes == null || imageBytes.Length == 0)
+                            {
+                                Console.WriteLine($"[Seeder] Empty image bytes for '{productName}'. Skipping image.");
+                                context.Products.Add(product);
+                                continue;
+                            }
+
+                            // Determine extension from media type
+                            string extension = mediaType switch
+                            {
+                                "image/png" => ".png",
+                                "image/jpeg" => ".jpg",
+                                "image/jpg" => ".jpg",
+                                "image/svg+xml" => ".svg",
+                                _ => ".png"
+                            };
+
+                            // Create IFormFile from bytes with correct extension and reset stream position
+                            var ms = new MemoryStream(imageBytes);
+                            ms.Position = 0;
+                            var generatedFileName = $"{Guid.NewGuid()}{extension}";
+                            IFormFile formFile = new FormFile(ms, 0, ms.Length, "file", generatedFileName)
+                            {
+                                Headers = new HeaderDictionary(),
+                                ContentType = mediaType
+                            };
+
+                            // Save using your FileService (allow .svg as well)
+                            product.ImageUrl = await _fileService.SaveFile(formFile, allowedExtensions);
+
+                            context.Products.Add(product);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[Seeder] Error saving image for '{productName}': {ex.Message}");
+                            // still add product without image to avoid losing data seeding
+                            context.Products.Add(product);
+                        }
+                    }
+
+                    // Optionally save per category to reduce memory usage
+                    await context.SaveChangesAsync();
+                }
+
+                // Final save (redundant if saved per category, but safe)
                 await context.SaveChangesAsync();
             }
         }
+
     }
 }

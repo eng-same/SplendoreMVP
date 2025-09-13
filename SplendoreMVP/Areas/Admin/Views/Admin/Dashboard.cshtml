@@ -160,7 +160,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6>Quick Product Actions</h6>
-                    <p class="text-muted small">Use your existing product management pages for edit/delete/upsert. This area can be extended to include quick action buttons per row.</p>
+                    <p class="text-muted small"></p>
                 </div>
             </div>
         </div>
@@ -257,13 +257,14 @@
             const token = getAntiForgeryToken();
             try {
                 const body = new URLSearchParams();
+                body.append('__RequestVerificationToken', token);
                 body.append('id', id);
                 body.append('stock', stock);
 
-                const res = await fetch('/Admin/Dashboard/QuickUpdateStock', {
+                const res = await fetch('/Admin/Admin/QuickUpdateStock', {
                     method: 'POST',
                     headers: {
-                        'RequestVerificationToken': token
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: body
                 });
@@ -276,7 +277,6 @@
                 }
 
                 const data = await res.json();
-                // Update DOM inline
                 const stockEl = document.getElementById(`stock-${data.id}`);
                 if (stockEl) stockEl.innerText = data.stock;
                 showMessage('Stock updated', 'success');
@@ -291,13 +291,14 @@
             const token = getAntiForgeryToken();
             try {
                 const body = new URLSearchParams();
+                body.append('__RequestVerificationToken', token); // ✅ token in body
                 body.append('id', id);
                 body.append('price', price);
 
-                const res = await fetch('/Admin/Dashboard/QuickUpdatePrice', {
+                const res = await fetch('/Admin/Admin/QuickUpdatePrice', {
                     method: 'POST',
                     headers: {
-                        'RequestVerificationToken': token
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: body
                 });
@@ -310,14 +311,8 @@
                 }
 
                 const data = await res.json();
-                // Update DOM inline: find product row, optionally update price display elsewhere
-                const row = document.querySelector(`tr[data-product-id="${data.id}"]`);
-                if (row) {
-                    // If you had a price cell, update it. In low-stock table we didn't show price,
-                    // but we can update a price cell if present with id="price-<id>"
-                    const priceEl = document.getElementById(`price-${data.id}`);
-                    if (priceEl) priceEl.innerText = parseFloat(data.price).toFixed(2);
-                }
+                const priceEl = document.getElementById(`price-${data.id}`);
+                if (priceEl) priceEl.innerText = parseFloat(data.price).toFixed(2);
                 showMessage('Price updated', 'success');
 
             } catch (err) {

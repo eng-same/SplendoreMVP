@@ -1,52 +1,57 @@
-﻿<ul class="navbar-nav align-items-center ms-auto">
-    @if (SignInManager.IsSignedIn(User))
-    {
-        var currentUser = await UserManager.GetUserAsync(User);
-        var roles = await UserManager.GetRolesAsync(currentUser);
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
-        var profilePicture = string.IsNullOrEmpty(currentUser?.ProfilePic)
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var roles = await UserManager.GetRolesAsync(currentUser);
+
+    var profilePicture = string.IsNullOrEmpty(currentUser?.ProfilePic)
         ? "https://placehold.co/40"
         : currentUser.ProfilePic;
 
-        <!-- Profile dropdown -->
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="@profilePicture"
-                     alt="Profile"
-                     class="rounded-circle me-2 border shadow-sm"
-                     style="width:36px;height:36px;object-fit:cover;" />
-                <span class="fw-semibold text-truncate" style="max-width:120px;">
-                    @UserManager.GetUserName(User)
-                </span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                <li class="dropdown-header text-muted small">
-                    @if (roles.Any())
-                    {
-                        <span>@string.Join(", ", roles)</span>
-                    }
-                    else
-                    {
-                        <span>User</span>
-                    }
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                        <a asp-area="" asp-controller="Auth" asp-action="Logout" class="dropdown-item text-danger">Logout</a>
-                    
-                </li>
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="btn btn-sm me-2" style="background-color:#2A7F62;color:#fff;"
-               asp-controller="Auth" asp-action="Login">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-sm btn-outline-secondary"
-               asp-controller="Auth" asp-action="Register">Register</a>
-        </li>
-    }
-</ul>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center"
+           href="#"
+           role="button"
+           data-bs-toggle="dropdown"
+           aria-expanded="false">
+            <img src="@profilePicture"
+                 alt="Profile"
+                 class="rounded-circle me-2 border shadow-sm"
+                 style="width:36px;height:36px;object-fit:cover;" />
+            <span class="fw-semibold text-truncate" style="max-width:120px;">
+                @UserManager.GetUserName(User)
+            </span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+            <li class="dropdown-header text-muted small">
+                @if (roles.Any())
+                {
+                    <span>@string.Join(", ", roles)</span>
+                }
+                else
+                {
+                    <span>User</span>
+                }
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <a asp-area="" asp-controller="Auth" asp-action="Logout" class="dropdown-item text-danger">Logout</a>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="btn btn-sm me-2" style="background-color:#2A7F62;color:#fff;"
+           asp-controller="Auth" asp-action="Login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-sm btn-outline-secondary"
+           asp-controller="Auth" asp-action="Register">Register</a>
+    </li>
+}

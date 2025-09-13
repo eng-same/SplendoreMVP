@@ -1,121 +1,83 @@
-﻿@model  UserRegesterVM;
+﻿@model UserRegesterVM
 
+<section class="background-radial-gradient overflow-hidden">
+    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+        <div class="row gx-lg-5 align-items-center mb-5">
+            <!-- Welcome Text -->
+            <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+                <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+                    Join <span style="color: hsl(218, 81%, 75%)">Splendore Store</span>
+                </h1>
+                <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
+                    Create your free account today and enjoy a personalized shopping experience.
+                    Save your favorites, track your orders, and get the best deals delivered right to you.
+                </p>
+            </div>
 
- <!-- Section: Design Block -->
-    <section class="background-radial-gradient overflow-hidden">
-      
+            <!-- Form -->
+            <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+                <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+                <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
 
-        <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-            <div class="row gx-lg-5 align-items-center mb-5">
-                <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                    <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                        The best offer <br />
-                        <span style="color: hsl(218, 81%, 75%)">for your business</span>
-                    </h1>
-                    <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                        Temporibus, expedita iusto veniam atque, magni tempora mollitia
-                        dolorum consequatur nulla, neque debitis eos reprehenderit quasi
-                        ab ipsum nisi dolorem modi. Quos?
-                    </p>
-                </div>
-
-                <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                    <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-                    <div class="card bg-glass">
-                        <div class="card-body px-4 py-5 px-md-5">
+                <div class="card bg-glass">
+                    <div class="card-body px-4 py-5 px-md-5">
                         <form asp-action="Register" method="post" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <!-- 2 column grid layout with text inputs for the first and last names -->
-                                <div class="row">
-                                    <!-- FirstName -->
-                                    <div class="col-md-6 mb-4">
-                                        <div data-mdb-input-init class="form-outline">
-                                        <input type="text" asp-for="FirstName"  class="form-control" />
-                                        <label class="form-label" asp-for="FirstName">First name</label>
-                                        <span asp-validation-for="FirstName" class="text-danger"></span>
 
-                                        </div>
-                                    </div>
-                                    <!-- LastName -->
-                                    <div class="col-md-6 mb-4">
-                                        <div data-mdb-input-init class="form-outline">
-                                        <input type="text" asp-for="LastName"  class="form-control" />
-                                        <label class="form-label" asp-for="LastName">Last name</label>
-                                        <span asp-validation-for="LastName" class="text-danger"></span>
-
-                                        </div>
-                                    </div>
-
+                            <!-- First + Last Name -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <input type="text" asp-for="FirstName" class="form-control" placeholder="First name" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
                                 </div>
+                                <div class="col-md-6 mb-4">
+                                    <input type="text" asp-for="LastName" class="form-control" placeholder="Last name" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
 
-                                <!-- Email input -->
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <input type="email" asp-for="Email"  class="form-control" />
-                                <label class="form-label" asp-for="Email">Email address</label>
+                            <!-- Email -->
+                            <div class="mb-4">
+                                <input type="email" asp-for="Email" class="form-control" placeholder="Email address" />
                                 <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
 
-                                </div>
-
-                                <!-- Password input -->
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="password" asp-for="Password" class="form-control" />
-                                <label class="form-label" asp-for="Password">Password</label>
+                            <!-- Password -->
+                            <div class="mb-4">
+                                <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
                                 <span asp-validation-for="Password" class="text-danger"></span>
-
-                                </div>
-                                <!-- Password input -->
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="password" asp-for="ConfirmPassword" class="form-control" />
-                                <label class="form-label" asp-for="ConfirmPassword">ConfirmPassword </label>
+                            </div>
+                            <div class="mb-4">
+                                <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password" />
                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
 
-                                </div>
-                                <!-- Profile picture -->
-                                <div class="input-group mb-3">
+                            <!-- Profile Picture -->
+                            <div class="input-group mb-3">
                                 <label class="input-group-text" asp-for="ProfilePic">Profile picture</label>
                                 <input type="file" class="form-control" asp-for="ProfilePic">
                                 <span asp-validation-for="ProfilePic" class="text-danger"></span>
+                            </div>
 
-                                </div>
+                            <!-- Remember Me -->
+                            <div class="form-check d-flex justify-content-center mb-4">
+                                <input class="form-check-input me-2" asp-for="RememberMe" type="checkbox" value="true" checked />
+                                <label class="form-check-label" asp-for="RememberMe">Remember Me</label>
+                            </div>
 
-                                <!-- Checkbox -->
-                                <div class="form-check d-flex justify-content-center mb-4">
-                                <input class="form-check-input me-2" asp-for="RememberMe"  type="checkbox" value="true" checked />
-                                <label class="form-check-label" asp-for="RememberMe"> Remember Me </label>
-                                </div>
+                            <!-- Submit -->
+                            <button type="submit" class="btn btn-primary btn-block mb-4">
+                                Create Account
+                            </button>
 
-                                <!-- Submit button -->
-                                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-                                    Sign up
-                                </button>
-
-                                <!-- Register buttons -->
-                                @* <div class="text-center">
-                                    <p>or sign up with:</p>
-                                     <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                        <i class="fab fa-facebook-f">dd</i>
-                                    </button>
-
-                                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                        <i class="fab fa-google">dd</i>
-                                    </button>
-
-                                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                        <i class="fab fa-twitter">dd</i>
-                                    </button>
-
-                                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                        <i class="fab fa-github"> dd</i>
-                                    </button> 
-                                </div> *@
-                            </form>
-                        </div>
+                            <p class="text-center">
+                                Already have an account?
+                                <a asp-action="Login" class="fw-bold">Sign in</a>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Section: Design Block -->
+    </div>
+</section>

@@ -18,6 +18,8 @@ builder.Services.AddScoped<UserOrderRepository>();
 builder.Services.AddScoped<ReportRepository>();
 builder.Services.AddTransient<OrderRepository>();
 builder.Services.AddTransient<UserProductRepository>();
+builder.Services.AddScoped<IdentityDataSeeder>();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -62,9 +64,16 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 //seed data
-var seeder = new IdentityDataSeeder();
-await seeder.SeedIdentityAsync(app);
-await seeder.SeedProductsAsync(app);
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<IdentityDataSeeder>();
+
+    // Seed roles and admin user
+    await seeder.SeedIdentityAsync(app);
+
+    // Seed categories and products
+    await seeder.SeedProductsAsync(app);
+}
 
 
 app.Run();
